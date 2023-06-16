@@ -110,6 +110,68 @@ objects:
           python: "ipfs_receiver.file_stat"
           javascript: "ipfsReceiver.fileStat"
           rust: "ipfs_receiver::file_stat"
+  memory:
+    methods:
+      read:
+        operationId: read
+        summary: Read from memory.
+        description: Reads data from memory.
+        returnType:
+          type: object
+        receiver:
+          go: "MemoryReceiver.Read"
+          python: "memory_receiver.read"
+          javascript: "memoryReceiver.read"
+          rust: "memory_receiver::read"
+      write:
+        operationId: write
+        summary: Write to memory.
+        description: Write data to memory.
+        parameters:
+          - name: data
+            type: string
+        returnType:
+          type: boolean
+        receiver:
+          go: "MemoryReceiver.Write"
+          python: "memory_receiver.write"
+          javascript: "memoryReceiver.write"
+          rust: "memory_receiver::write"
+  http:
+    methods:
+      request:
+        operationId: request
+        summary: Make an HTTP request.
+        description: Makes an HTTP request and returns the response.
+        parameters:
+          - name: method
+            type: string
+          - name: url
+            type: string
+        returnType:
+          type: object
+          $ref: "#/definitions/HttpResponse"
+        receiver:
+          go: "HttpReceiver.Request"
+          python: "http_receiver.request"
+          javascript: "httpReceiver.request"
+          rust: "http_receiver::request"
+  cgi:
+    methods:
+      execute:
+        operationId: execute
+        summary: Execute a CGI command.
+        description: Executes a CGI command and returns the output.
+        parameters:
+          - name: command
+            type: string
+        returnType:
+          type: string
+        receiver:
+          go: "CgiReceiver.Execute"
+          python: "cgi_receiver.execute"
+          javascript: "cgiReceiver.execute"
+          rust: "cgi_receiver::execute"
 definitions:
   FileWriteOptions:
     type: object
@@ -129,3 +191,11 @@ definitions:
         type: integer
       type:
         type: string
+  HttpResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+      body:
+        type: string
+
