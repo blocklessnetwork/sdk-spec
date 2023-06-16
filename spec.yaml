@@ -2,96 +2,130 @@ stubby: "1.0"
 info:
   version: "1.0.0"
   title: Blockless SDK
-namespace: blockless
-methods:
-  httpOpen:
-    operationId: HttpOpen
-    summary: Opens an HTTP connection.
-    description: Opens an HTTP connection to the specified URL.
-    parameters:
-      - name: url
-        type: string
-    returnType:
-      $ref: "#/definitions/HttpResponse"
-    receiver:
-      go: "AssemblyScriptReceiver.HttpOpen"
-      python: "assemblyscript_receiver.http_open"
-      javascript: "assemblyScriptReceiver.httpOpen"
-      rust: "assemblyscript_receiver::http_open"
-  cgiCommand:
-    operationId: CgiCommand
-    summary: Executes a CGI command.
-    description: Executes a CGI command and returns the result.
-    parameters:
-      - name: command
-        type: string
-    returnType:
-      $ref: "#/definitions/CgiResponse"
-    receiver:
-      go: "AssemblyScriptReceiver.CgiCommand"
-      python: "assemblyscript_receiver.cgi_command"
-      javascript: "assemblyScriptReceiver.cgiCommand"
-      rust: "assemblyscript_receiver::cgi_command"
-  ipfsFileWrite:
-    operationId: ipfsFileWrite
-    summary: Writes a file to IPFS.
-    description: Writes a file to IPFS with the specified filename and data.
-    parameters:
-      - name: filename
-        type: string
-      - name: data
-        type: array
-        items:
-          type: integer
-    returnType:
-      $ref: "#/definitions/IpfsResponse"
-    receiver:
-      go: "AssemblyScriptReceiver.IpfsFileWrite"
-      python: "assemblyscript_receiver.ipfs_file_write"
-      javascript: "assemblyScriptReceiver.ipfsFileWrite"
-      rust: "assemblyscript_receiver::ipfs_file_write"
-  envVarsRead:
-    operationId: EnvVarsRead
-    summary: Reads an environment variable.
-    description: Reads an environment variable with the specified name.
-    parameters:
-      - name: var_name
-        type: string
-    returnType:
-      $ref: "#/definitions/EnvVarResponse"
-    receiver:
-      go: "AssemblyScriptReceiver.EnvVarsRead"
-      python: "assemblyscript_receiver.env_vars_read"
-      javascript: "assemblyScriptReceiver.envVarsRead"
-      rust: "assemblyscript_receiver::env_vars_read"
+namespace: BlocklessSDK
+objects:
+  ipfs:
+    methods:
+      fileList:
+        operationId: fileList
+        summary: List files in IPFS.
+        description: List all the files in the given path in IPFS.
+        parameters:
+          - name: path
+            type: string
+        returnType:
+          type: array
+          items:
+            type: string
+        receiver:
+          go: "IpfsReceiver.FileList"
+          python: "ipfs_receiver.file_list"
+          javascript: "ipfsReceiver.fileList"
+          rust: "ipfs_receiver::file_list"
+      fileRemove:
+        operationId: fileRemove
+        summary: Remove a file or directory from IPFS.
+        description: Remove a file or directory from the given path in IPFS.
+        parameters:
+          - name: path
+            type: string
+          - name: recursive
+            type: boolean
+          - name: force
+            type: boolean
+        returnType:
+          type: boolean
+        receiver:
+          go: "IpfsReceiver.FileRemove"
+          python: "ipfs_receiver.file_remove"
+          javascript: "ipfsReceiver.fileRemove"
+          rust: "ipfs_receiver::file_remove"
+      createDir:
+        operationId: createDir
+        summary: Create a new directory in IPFS.
+        description: Create a new directory in the given path in IPFS.
+        parameters:
+          - name: path
+            type: string
+          - name: parents
+            type: boolean
+        returnType:
+          type: boolean
+        receiver:
+          go: "IpfsReceiver.CreateDir"
+          python: "ipfs_receiver.create_dir"
+          javascript: "ipfsReceiver.createDir"
+          rust: "ipfs_receiver::create_dir"
+      fileWrite:
+        operationId: fileWrite
+        summary: Write to a file in IPFS.
+        description: Write data to a file in IPFS.
+        parameters:
+          - name: options
+            type: object
+            $ref: "#/definitions/FileWriteOptions"
+          - name: data
+            type: array
+            items:
+              type: integer
+        returnType:
+          type: boolean
+        receiver:
+          go: "IpfsReceiver.FileWrite"
+          python: "ipfs_receiver.file_write"
+          javascript: "ipfsReceiver.fileWrite"
+          rust: "ipfs_receiver::file_write"
+      fileRead:
+        operationId: fileRead
+        summary: Read from a file in IPFS.
+        description: Read data from a file in IPFS.
+        parameters:
+          - name: path
+            type: string
+          - name: offset
+            type: integer
+          - name: buffer
+            type: array
+            items:
+              type: integer
+        returnType:
+          type: string
+        receiver:
+          go: "IpfsReceiver.FileRead"
+          python: "ipfs_receiver.file_read"
+          javascript: "ipfsReceiver.fileRead"
+          rust: "ipfs_receiver::file_read"
+      fileStat:
+        operationId: fileStat
+        summary: Get file statistics in IPFS.
+        description: Get statistics about a file in IPFS.
+        parameters:
+          - name: path
+            type: string
+        returnType:
+          type: object
+          $ref: "#/definitions/FileStat"
+        receiver:
+          go: "IpfsReceiver.FileStat"
+          python: "ipfs_receiver.file_stat"
+          javascript: "ipfsReceiver.fileStat"
+          rust: "ipfs_receiver::file_stat"
 definitions:
-  HttpResponse:
+  FileWriteOptions:
     type: object
     properties:
-      statusCode:
+      filename:
+        type: string
+  FileStat:
+    type: object
+    properties:
+      size:
         type: integer
-      headers:
-        type: object
-      body:
+      hash:
         type: string
-  CgiResponse:
-    type: object
-    properties:
-      stdout:
-        type: string
-      stderr:
-        type: string
-  IpfsResponse:
-    type: object
-    properties:
-      success:
-        type: boolean
-      error:
-        type: string
-  EnvVarResponse:
-    type: object
-    properties:
-      name:
-        type: string
-      value:
+      cumulativeSize:
+        type: integer
+      blocks:
+        type: integer
+      type:
         type: string
