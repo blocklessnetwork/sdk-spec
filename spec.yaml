@@ -1,0 +1,97 @@
+stubby: "1.0"
+info:
+  version: "1.0.0"
+  title: Blockless SDK
+namespace: blockless
+methods:
+  httpOpen:
+    operationId: HttpOpen
+    summary: Opens an HTTP connection.
+    description: Opens an HTTP connection to the specified URL.
+    parameters:
+      - name: url
+        type: string
+    returnType:
+      $ref: "#/definitions/HttpResponse"
+    receiver:
+      go: "AssemblyScriptReceiver.HttpOpen"
+      python: "assemblyscript_receiver.http_open"
+      javascript: "assemblyScriptReceiver.httpOpen"
+      rust: "assemblyscript_receiver::http_open"
+  cgiCommand:
+    operationId: CgiCommand
+    summary: Executes a CGI command.
+    description: Executes a CGI command and returns the result.
+    parameters:
+      - name: command
+        type: string
+    returnType:
+      $ref: "#/definitions/CgiResponse"
+    receiver:
+      go: "AssemblyScriptReceiver.CgiCommand"
+      python: "assemblyscript_receiver.cgi_command"
+      javascript: "assemblyScriptReceiver.cgiCommand"
+      rust: "assemblyscript_receiver::cgi_command"
+  ipfsFileWrite:
+    operationId: ipfsFileWrite
+    summary: Writes a file to IPFS.
+    description: Writes a file to IPFS with the specified filename and data.
+    parameters:
+      - name: filename
+        type: string
+      - name: data
+        type: array
+        items:
+          type: integer
+    returnType:
+      $ref: "#/definitions/IpfsResponse"
+    receiver:
+      go: "AssemblyScriptReceiver.IpfsFileWrite"
+      python: "assemblyscript_receiver.ipfs_file_write"
+      javascript: "assemblyScriptReceiver.ipfsFileWrite"
+      rust: "assemblyscript_receiver::ipfs_file_write"
+  envVarsRead:
+    operationId: EnvVarsRead
+    summary: Reads an environment variable.
+    description: Reads an environment variable with the specified name.
+    parameters:
+      - name: var_name
+        type: string
+    returnType:
+      $ref: "#/definitions/EnvVarResponse"
+    receiver:
+      go: "AssemblyScriptReceiver.EnvVarsRead"
+      python: "assemblyscript_receiver.env_vars_read"
+      javascript: "assemblyScriptReceiver.envVarsRead"
+      rust: "assemblyscript_receiver::env_vars_read"
+definitions:
+  HttpResponse:
+    type: object
+    properties:
+      statusCode:
+        type: integer
+      headers:
+        type: object
+      body:
+        type: string
+  CgiResponse:
+    type: object
+    properties:
+      stdout:
+        type: string
+      stderr:
+        type: string
+  IpfsResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+      error:
+        type: string
+  EnvVarResponse:
+    type: object
+    properties:
+      name:
+        type: string
+      value:
+        type: string
